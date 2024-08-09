@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="stylesheet" href="/style.css" />
+      <title><%=title%></title>
+   </head>
+   <body>
+      <%- include("partials/header") %>
+      <main>
+         <div class="games-list">
+            <% games.forEach(game => { %>
+            <div class="game-data">
+               <div class="game-data-section">
+                  <p>Title: <%=game.title%></p>
+                  <p>Released: <%=game.release_year%></p>
+                  <p>Rating: <%=game.rating%>/10</p>
+               </div>
+               <div class="game-data-section">
+                  <p>Price: $<%=game.price%></p>
+                  <p>Quantity: <%=game.quantity%></p>
+               </div>
+            </div>
+            <% }); %> <% if (games.length == 0) {%>
+            <p style="color: #4a4a4a">No games available at the moment</p>
+            <% }%>
+         </div>
+      </main>
+   </body>
+</html>
