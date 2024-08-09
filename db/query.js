@@ -6,6 +6,21 @@ class GameService {
 
       return rows;
    }
+
+   async getGame(id) {
+      const { rows } = await pool.query("SELECT * FROM game WHERE id = $1", [id]);
+
+      return rows[0];
+   }
+}
+
+class GenreService {
+   async getAllGenres() {
+      const { rows } = await pool.query("SELECT * FROM genre");
+
+      return rows;
+   }
+
    async getAllGamesInGenre(id) {
       const { rows } = await pool.query(
          `SELECT game.*
@@ -18,6 +33,15 @@ class GameService {
 
       return rows;
    }
+}
+
+class DeveloperService {
+   async getAllDevelopers() {
+      const { rows } = await pool.query("SELECT * FROM developer");
+
+      return rows;
+   }
+
    async getAllGamesByDeveloper(id) {
       const { rows } = await pool.query(
          `SELECT game.*
@@ -30,6 +54,15 @@ class GameService {
 
       return rows;
    }
+}
+
+class PlatformService {
+   async getAllPlatforms() {
+      const { rows } = await pool.query("SELECT * FROM platform");
+
+      return rows;
+   }
+
    async getAllGamesOnPlatform(id) {
       const { rows } = await pool.query(
          `SELECT game.*
@@ -44,35 +77,21 @@ class GameService {
    }
 }
 
-class GenreService {
-   async getAllGenres() {
-      const { rows } = await pool.query("SELECT * FROM genre");
-
-      return rows;
-   }
-}
-
-class DeveloperService {
-   async getAllDevelopers() {
-      const { rows } = await pool.query("SELECT * FROM developer");
-
-      return rows;
-   }
-}
-
-class PlatformService {
-   async getAllPlatforms() {
-      const { rows } = await pool.query("SELECT * FROM platform");
-
-      return rows;
-   }
-}
-
 class IndexService {
-   async getAllCategories() {
-      const { rows } = await pool.query("SELECT * FROM games");
+   async getInventoryCount() {
+      const [gamesCount, genresCount, platformsCount, developersCount] = await Promise.all([
+         pool.query("SELECT COUNT(*) FROM game"),
+         pool.query("SELECT COUNT(*) FROM genre"),
+         pool.query("SELECT COUNT(*) FROM platform"),
+         pool.query("SELECT COUNT(*) FROM developer"),
+      ]);
 
-      return rows;
+      return {
+         gamesCount: gamesCount.rows[0].count,
+         genresCount: genresCount.rows[0].count,
+         platformsCount: platformsCount.rows[0].count,
+         developersCount: developersCount.rows[0].count,
+      };
    }
 }
 
