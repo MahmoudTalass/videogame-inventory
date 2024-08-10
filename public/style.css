@@ -4,10 +4,14 @@
    box-sizing: border-box;
    font-family: sans-serif;
    color: #fff;
+   --color1: #f3ede0;
+   --color2: #5d9ca4;
+   --color3: #a3b18a;
+   --color4: #b4a89a;
 }
 
 body {
-   background-color: #f3ede0;
+   background-color: var(--color1);
 }
 
 .header {
@@ -16,7 +20,7 @@ body {
    flex-direction: column;
    gap: 1.5rem;
    text-align: center;
-   background: #5d9ca4;
+   background: var(--color2);
 }
 
 header > h1 {
@@ -37,7 +41,7 @@ nav > ul {
 
 .navlink {
    padding: 0.5rem 1rem;
-   background-color: #a3b18a;
+   background-color: var(--color3);
    border-radius: 0.5rem;
 }
 
@@ -53,7 +57,7 @@ main {
 }
 
 .welcome-msg-container {
-   background-color: #a3b18a;
+   background-color: var(--color3);
    width: 100%;
    max-width: 600px;
    padding: 1rem;
@@ -72,7 +76,7 @@ main {
 
 .inventory-count-table {
    text-align: center;
-   border: 1px solid white;
+   border: 1px solid #fff;
    width: 300px;
    border-radius: 0.5rem;
 }
@@ -86,7 +90,7 @@ main {
 
 .game-data {
    display: flex;
-   background-color: #b4a89a;
+   background-color: var(--color4);
    padding: 1rem;
    border-radius: 0.5rem;
    justify-content: space-between;
@@ -96,4 +100,26 @@ main {
    display: flex;
    flex-direction: column;
    gap: 0.6rem;
+}
+
+.category-list-container {
+   background-color: var(--color3);
+   width: 100%;
+   max-width: 600px;
+   padding: 1rem;
+   display: flex;
+   flex-direction: column;
+   gap: 1.5rem;
+   border-radius: 0.5rem;
+   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+   line-height: 1.5rem;
+   align-items: center;
+}
+
+.category-list {
+   list-style-type: none;
+}
+
+.category-item {
+   margin-bottom: 0.5rem;
 }
