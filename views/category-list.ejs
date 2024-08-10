@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title><%title%></title>
+      <link rel="stylesheet" href="/style.css" />
+   </head>
+   <body>
+      <%-include("partials/header")%>
+      <main>
+         <div class="category-list-container">
+            <p>Clicking on any of the following will show you games in that category.</p>
+            <ul class="category-list">
+               <% list.forEach(item => { %>
+               <li class="category-item">
+                  <a href="/<%=item.id%>" class="category-link"><%= item.name %></a>
+               </li>
+               <% }) %> <% if (list.length === 0) { %>
+               <li class="category-item">
+                  Nothing in this category is available to display at the moment.
+               </li>
+               <% } %>
+            </ul>
+         </div>
+      </main>
+   </body>
+</html>
