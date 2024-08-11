@@ -9,9 +9,12 @@ const getAllGenres = asyncHandler(async (req, res) => {
 
 const getAllGamesInGenre = asyncHandler(async (req, res) => {
    const { id } = req.params;
-   const games = await GenreService.getAllGamesInGenre();
+   const games = await GenreService.getAllGamesInGenre(id);
 
-   // display in view
+   res.render("games", {
+      title: `${games[0].genre_name} Games`,
+      games,
+   });
 });
 
 module.exports = {
