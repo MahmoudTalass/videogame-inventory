@@ -23,7 +23,7 @@ class GenreService {
 
    async getAllGamesInGenre(id) {
       const { rows } = await pool.query(
-         `SELECT game.*
+         `SELECT game.*, genre.name AS genre_name
       FROM game 
       JOIN game_genre ON game.id = game_genre.game_id 
       JOIN genre ON game_genre.genre_id = genre.id
@@ -44,7 +44,7 @@ class DeveloperService {
 
    async getAllGamesByDeveloper(id) {
       const { rows } = await pool.query(
-         `SELECT game.*
+         `SELECT game.*, developer.name AS developer_name
       FROM game 
       JOIN game_developer ON game.id = game_developer.game_id 
       JOIN developer ON game_developer.developer_id = developer.id
@@ -65,7 +65,7 @@ class PlatformService {
 
    async getAllGamesOnPlatform(id) {
       const { rows } = await pool.query(
-         `SELECT game.*
+         `SELECT game.* platform.name AS platform_name 
       FROM game 
       JOIN game_platform ON game.id = game_platform.game_id 
       JOIN platform ON game_platform.platform_id = platform.id
