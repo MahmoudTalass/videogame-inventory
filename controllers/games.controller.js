@@ -4,7 +4,7 @@ const { GameService } = require("../db/query");
 const getAllGames = asyncHandler(async (req, res) => {
    const games = await GameService.getAllGames();
 
-   res.render("games", { title: "Games", games });
+   res.render("games", { title: "All Games", games });
 });
 
 const getGame = asyncHandler(async (req, res) => {
