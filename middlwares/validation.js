@@ -1,4 +1,6 @@
 const { validationResult, body } = require("express-validator");
+const asyncHandler = require("express-async-handler");
+const { DeveloperService, GenreService, PlatformService } = require("../db/query");
 
 const validateGameInput = [
    body("title")
@@ -22,21 +24,40 @@ const validateGameInput = [
    body("genres").isArray({ min: 1 }).withMessage("Must select at least one genre."),
    body("platforms").isArray({ min: 1 }).withMessage("Must select at least one platform."),
    body("developers").isArray({ min: 1 }).withMessage("Must select at least one developer."),
-   (req, res, next) => {
+   asyncHandler(async (req, res, next) => {
       const errors = validationResult(req);
 
       if (!errors.isEmpty()) {
+         const game = {
+            title: req.body.title,
+            description: req.body.description,
+            release_year: req.body.release,
+            rating: req.body.rating,
+            price: req.body.price,
+            quantity: req.body.quantity,
+         };
+
+         const [genres, developers, platforms] = await Promise.all([
+            GenreService.getAllGenres(),
+            DeveloperService.getAllDevelopers(),
+            PlatformService.getAllPlatforms(),
+         ]);
+
          return res.status(400).render("create-game-form", {
             title: "Add New Game",
-            genres: req.genres || [],
-            developers: req.developers || [],
-            platforms: req.platforms || [],
+            game,
+            checkedGenres: req.genres || [],
+            checkedDevelopers: req.developers || [],
+            checkedPlatforms: req.platforms || [],
+            genres: genres.map((genre) => genre.id),
+            developers: developers.map((developer) => developer.id),
+            platforms: platforms.map((platform) => platform.id),
             errors: errors.array(),
          });
       }
 
       next();
-   },
+   }),
 ];
 
 const validateGenre = [
