@@ -23,13 +23,13 @@ function pairGameWithCategory(gameId, categoryIdsArr) {
 
 class GameService {
    async getAllGames() {
-      const { rows } = await pool.query("SELECT * FROM game");
+      const { rows } = await pool.query("SELECT * FROM game;");
 
       return rows;
    }
 
    async getGame(id) {
-      const { rows } = await pool.query("SELECT * FROM game WHERE id = $1", [id]);
+      const { rows } = await pool.query("SELECT * FROM game WHERE id = $1;", [id]);
 
       return rows[0];
    }
@@ -46,25 +46,25 @@ class GameService {
       platforms,
    }) {
       const gameId = pool.query(
-         "INSERT INTO game (title, description, rating, release_year, price, quantity) VALUES($1, $2, $3, $4, $5, $6) RETURNING id",
+         "INSERT INTO game (title, description, rating, release_year, price, quantity) VALUES($1, $2, $3, $4, $5, $6) RETURNING id;",
          [title, description, rating, release, price, quantity]
       );
 
       const genresInsertParameterization = multipleInsertsParameterization(genres.length);
       pool.query(
-         `INSERT INTO game_genre (game_id, genre_id) VALUES ${genresInsertParameterization}`,
+         `INSERT INTO game_genre (game_id, genre_id) VALUES ${genresInsertParameterization};`,
          pairGameWithCategory(gameId, genres)
       );
 
       const developersInsertParameterization = multipleInsertsParameterization(developers.length);
       pool.query(
-         `INSERT INTO game_developer (game_id, developer_id) VALUES ${developersInsertParameterization}`,
+         `INSERT INTO game_developer (game_id, developer_id) VALUES ${developersInsertParameterization};`,
          pairGameWithCategory(gameId, developers)
       );
 
       const platformsInsertParamterization = multipleInsertsParameterization(platforms.length);
       pool.query(
-         `INSERT INTO game_platform (game_id, platform_id) VALUES ${platformsInsertParamterization}`,
+         `INSERT INTO game_platform (game_id, platform_id) VALUES ${platformsInsertParamterization};`,
          pairGameWithCategory(gameId, platforms)
       );
    }
@@ -83,17 +83,21 @@ class GenreService {
       FROM game 
       JOIN game_genre ON game.id = game_genre.game_id 
       JOIN genre ON game_genre.genre_id = genre.id
-      WHERE genre.id = $1`,
+      WHERE genre.id = $1;`,
          [id]
       );
 
       return rows;
    }
+
+   async createGenre(name) {
+      await pool.query("INSERT INTO genre (name) VALUES ($1);", [name]);
+   }
 }
 
 class DeveloperService {
    async getAllDevelopers() {
-      const { rows } = await pool.query("SELECT * FROM developer");
+      const { rows } = await pool.query("SELECT * FROM developer;");
 
       return Promise.resolve(rows);
    }
@@ -104,17 +108,21 @@ class DeveloperService {
       FROM game 
       JOIN game_developer ON game.id = game_developer.game_id 
       JOIN developer ON game_developer.developer_id = developer.id
-      WHERE developer.id = $1`,
+      WHERE developer.id = $1;`,
          [id]
       );
 
       return rows;
    }
+
+   async createDeveloper(name) {
+      await pool.query("INSERT INTO developer (name) VALUES ($1);", [name]);
+   }
 }
 
 class PlatformService {
    async getAllPlatforms() {
-      const { rows } = await pool.query("SELECT * FROM platform");
+      const { rows } = await pool.query("SELECT * FROM platform;");
       return Promise.resolve(rows);
    }
 
@@ -124,21 +132,25 @@ class PlatformService {
       FROM game 
       JOIN game_platform ON game.id = game_platform.game_id 
       JOIN platform ON game_platform.platform_id = platform.id
-      WHERE platform.id = $1`,
+      WHERE platform.id = $1;`,
          [id]
       );
 
       return rows;
+   }
+
+   async createPlatform(name) {
+      await pool.query("INSERT INTO platform (name) VALUES ($1);", [name]);
    }
 }
 
 class IndexService {
    async getInventoryCount() {
       const [gamesCount, genresCount, platformsCount, developersCount] = await Promise.all([
-         pool.query("SELECT COUNT(*) FROM game"),
-         pool.query("SELECT COUNT(*) FROM genre"),
-         pool.query("SELECT COUNT(*) FROM platform"),
-         pool.query("SELECT COUNT(*) FROM developer"),
+         pool.query("SELECT COUNT(*) FROM game;"),
+         pool.query("SELECT COUNT(*) FROM genre;"),
+         pool.query("SELECT COUNT(*) FROM platform;"),
+         pool.query("SELECT COUNT(*) FROM developer;"),
       ]);
 
       return {
