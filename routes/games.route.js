@@ -5,10 +5,10 @@ const gamesController = require("../controllers/games.controller");
 // list all games
 router.get("/", gamesController.getAllGames);
 
-// create new game
+// render create new game form
 router.get("/create", gamesController.createGameGet);
 
-// update game info
+// create new game
 router.post("/create", gamesController.createGamePost);
 
 // get certain game
