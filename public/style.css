@@ -130,3 +130,67 @@ main {
 .category-item {
    margin-bottom: 0.5rem;
 }
+
+.game-form {
+   background-color: var(--color3);
+   width: 100%;
+   max-width: 600px;
+   padding: 1.5rem;
+   display: flex;
+   flex-direction: column;
+   gap: 1.5rem;
+   border-radius: 0.5rem;
+   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+   line-height: 1.5rem;
+   align-items: center;
+}
+
+.game-form > legend {
+   font-size: 1.5rem;
+}
+
+.input-container {
+   display: flex;
+   flex-direction: column;
+   width: 100%;
+}
+
+.input-container > input {
+   color: #000;
+   height: 1.5rem;
+   border-radius: 0.3rem;
+   border: none;
+}
+.input-container > select {
+   color: #000;
+   height: 1.5rem;
+   border-radius: 0.3rem;
+   border: none;
+}
+.input-container > textarea {
+   color: #000;
+   border-radius: 0.3rem;
+   border: none;
+   resize: vertical;
+}
+
+.num-input-container {
+   display: flex;
+   align-self: flex-start;
+   gap: 1rem;
+}
+.num-input-container > input {
+   border-radius: 0.3rem;
+   color: #000;
+   border: none;
+   width: 100%;
+   max-width: 50px;
+}
+
+.submit-btn {
+   border-radius: 0.3rem;
+   border: none;
+   background-color: var(--color2);
+   padding: 0.5rem 2rem;
+   font-size: 1rem;
+}
