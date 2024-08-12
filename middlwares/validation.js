@@ -1,5 +1,4 @@
 const { validationResult, body } = require("express-validator");
-const asyncHandler = require("express-async-handler");
 
 const validateGameInput = [
    body("title")
@@ -23,10 +22,8 @@ const validateGameInput = [
    body("genres").isArray({ min: 1 }).withMessage("Must select at least one genre."),
    body("platforms").isArray({ min: 1 }).withMessage("Must select at least one platform."),
    body("developers").isArray({ min: 1 }).withMessage("Must select at least one developer."),
-   asyncHandler((req, res, next) => {
+   (req, res, next) => {
       const errors = validationResult(req);
-
-      console.log(req.body);
 
       if (!errors.isEmpty()) {
          return res.status(400).render("create-game-form", {
@@ -39,9 +36,70 @@ const validateGameInput = [
       }
 
       next();
-   }),
+   },
+];
+
+const validateGenre = [
+   body("name")
+      .trim()
+      .isLength({ min: 0, max: 50 })
+      .withMessage("Genre name must be between 0 and 50 characters long."),
+   (req, res, next) => {
+      const errors = validationResult(req);
+
+      if (!errors.isEmpty()) {
+         return res.status(400).render("create-category", {
+            title: "Add New Genre",
+            name: req.body.name,
+            errors: errors.array(),
+         });
+      }
+
+      next();
+   },
+];
+const validateDeveloper = [
+   body("name")
+      .trim()
+      .isLength({ min: 0, max: 100 })
+      .withMessage("Developer name must be between 0 and 100 characters long."),
+   (req, res, next) => {
+      const errors = validationResult(req);
+
+      if (!errors.isEmpty()) {
+         return res.status(400).render("create-category", {
+            title: "Add New Developer",
+            name: req.body.name,
+            errors: errors.array(),
+         });
+      }
+
+      next();
+   },
+];
+const validatePlatform = [
+   body("name")
+      .trim()
+      .isLength({ min: 0, max: 0 })
+      .withMessage("Platform name must be between 0 and 50 characters long."),
+   (req, res, next) => {
+      const errors = validationResult(req);
+
+      if (!errors.isEmpty()) {
+         return res.status(400).render("create-category", {
+            title: "Add New Platform",
+            name: req.body.name,
+            errors: errors.array(),
+         });
+      }
+
+      next();
+   },
 ];
 
 module.exports = {
    validateGameInput,
+   validateDeveloper,
+   validateGenre,
+   validatePlatform,
 };
