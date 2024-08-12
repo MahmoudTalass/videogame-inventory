@@ -33,7 +33,7 @@ const createGameGet = asyncHandler(async (req, res) => {
 const createGamePost = [
    validateGameInput,
    asyncHandler(async (req, res) => {
-      await GameService.createGame(req.params);
+      await GameService.createGame(req.body);
 
       res.redirect("/games");
    }),
