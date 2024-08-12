@@ -5,11 +5,14 @@ const gamesController = require("../controllers/games.controller");
 // list all games
 router.get("/", gamesController.getAllGames);
 
-// get certain game
-router.get("/:id", gamesController.getGame);
+// create new game
+router.get("/create", gamesController.createGameGet);
 
 // update game info
-router.post("/:id");
+router.post("/create", gamesController.createGamePost);
+
+// get certain game
+router.get("/:id", gamesController.getGame);
 
 // delete game
 router.post("/:id/delete");
