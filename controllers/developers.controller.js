@@ -5,7 +5,11 @@ const { validateDeveloper } = require("../middlwares/validation");
 const getAllDevelopers = asyncHandler(async (req, res) => {
    const developers = await DeveloperService.getAllDevelopers();
 
-   res.render("category-list", { list: developers, title: "Developers list" });
+   res.render("category-list", {
+      list: developers,
+      title: "Developers list",
+      category: "developers",
+   });
 });
 
 const getAllGamesByDeveloper = asyncHandler(async (req, res) => {
@@ -16,7 +20,7 @@ const getAllGamesByDeveloper = asyncHandler(async (req, res) => {
 });
 
 const createDeveloperGet = (req, res) => {
-   res.render("create-category-form", { title: "Add New Developer", category: "Developer" });
+   res.render("create-category-form", { title: "Add New Developer" });
 };
 
 const createDeveloperPost = [

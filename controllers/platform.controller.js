@@ -5,7 +5,7 @@ const { validatePlatform } = require("../middlwares/validation");
 const getAllPlatforms = asyncHandler(async (req, res) => {
    const platforms = await PlatformService.getAllPlatforms();
 
-   res.render("category-list", { list: platforms, title: "Platforms list" });
+   res.render("category-list", { list: platforms, title: "Platforms list", category: "platforms" });
 });
 
 const getAllGamesOnPlatform = asyncHandler(async (req, res) => {
@@ -19,7 +19,7 @@ const getAllGamesOnPlatform = asyncHandler(async (req, res) => {
 });
 
 const createPlatformGet = (req, res) => {
-   res.render("create-category-form", { title: "Add New Platform", category: "Platform" });
+   res.render("create-category-form", { title: "Add New Platform" });
 };
 
 const createPlatformPost = [

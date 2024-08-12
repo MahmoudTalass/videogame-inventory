@@ -5,7 +5,7 @@ const { validateGenre } = require("../middlwares/validation");
 const getAllGenres = asyncHandler(async (req, res) => {
    const genres = await GenreService.getAllGenres();
 
-   res.render("category-list", { list: genres, title: "Genres list" });
+   res.render("category-list", { list: genres, title: "Genres list", category: "genres" });
 });
 
 const getAllGamesInGenre = asyncHandler(async (req, res) => {
@@ -19,7 +19,7 @@ const getAllGamesInGenre = asyncHandler(async (req, res) => {
 });
 
 const createGenreGet = (req, res) => {
-   res.render("create-category-form", { title: "Add New Genre", category: "Genre" });
+   res.render("create-category-form", { title: "Add New Genre" });
 };
 
 const createGenrePost = [
