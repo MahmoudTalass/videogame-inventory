@@ -1,5 +1,26 @@
 const pool = require("./pool");
 
+function multipleInsertsParameterization(numOfInserts) {
+   result = [];
+
+   currentParameter = 1;
+   for (let i = 0; i < numOfInserts; i++) {
+      result.push(`($${currentParameter}, $${currentParameter + 1})`);
+      currentParameter += 2;
+   }
+
+   return result.join(", ");
+}
+
+function pairGameWithCategory(gameId, categoryIdsArr) {
+   result = [];
+
+   categoryIdsArr.forEach((id) => {
+      result.push(gameId);
+      result.push(id);
+   });
+}
+
 class GameService {
    async getAllGames() {
       const { rows } = await pool.query("SELECT * FROM game");
@@ -12,13 +33,48 @@ class GameService {
 
       return rows[0];
    }
+
+   async createGame({
+      title,
+      description,
+      release,
+      price,
+      quantity,
+      rating,
+      genres,
+      developers,
+      platforms,
+   }) {
+      const gameId = pool.query(
+         "INSERT INTO game (title, description, rating, release_year, price, quantity) VALUES($1, $2, $3, $4, $5, $6) RETURNING id",
+         [title, description, rating, release, price, quantity]
+      );
+
+      const genresInsertParameterization = multipleInsertsParameterization(genres.length);
+      pool.query(
+         `INSERT INTO game_genre (game_id, genre_id) VALUES ${genresInsertParameterization}`,
+         pairGameWithCategory(gameId, genres)
+      );
+
+      const developersInsertParameterization = multipleInsertsParameterization(developers.length);
+      pool.query(
+         `INSERT INTO game_developer (game_id, developer_id) VALUES ${developersInsertParameterization}`,
+         pairGameWithCategory(gameId, developers)
+      );
+
+      const platformsInsertParamterization = multipleInsertsParameterization(platforms.length);
+      pool.query(
+         `INSERT INTO game_platform (game_id, platform_id) VALUES ${platformsInsertParamterization}`,
+         pairGameWithCategory(gameId, platforms)
+      );
+   }
 }
 
 class GenreService {
    async getAllGenres() {
       const { rows } = await pool.query("SELECT * FROM genre");
 
-      return rows;
+      return Promise.resolve(rows);
    }
 
    async getAllGamesInGenre(id) {
@@ -39,7 +95,7 @@ class DeveloperService {
    async getAllDevelopers() {
       const { rows } = await pool.query("SELECT * FROM developer");
 
-      return rows;
+      return Promise.resolve(rows);
    }
 
    async getAllGamesByDeveloper(id) {
@@ -59,8 +115,7 @@ class DeveloperService {
 class PlatformService {
    async getAllPlatforms() {
       const { rows } = await pool.query("SELECT * FROM platform");
-
-      return rows;
+      return Promise.resolve(rows);
    }
 
    async getAllGamesOnPlatform(id) {
