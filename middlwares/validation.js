@@ -69,7 +69,7 @@ const validateGenre = [
       const errors = validationResult(req);
 
       if (!errors.isEmpty()) {
-         return res.status(400).render("create-category", {
+         return res.status(400).render("create-category-form", {
             title: "Add New Genre",
             name: req.body.name,
             errors: errors.array(),
@@ -88,7 +88,7 @@ const validateDeveloper = [
       const errors = validationResult(req);
 
       if (!errors.isEmpty()) {
-         return res.status(400).render("create-category", {
+         return res.status(400).render("create-category-form", {
             title: "Add New Developer",
             name: req.body.name,
             errors: errors.array(),
@@ -107,7 +107,7 @@ const validatePlatform = [
       const errors = validationResult(req);
 
       if (!errors.isEmpty()) {
-         return res.status(400).render("create-category", {
+         return res.status(400).render("create-category-form", {
             title: "Add New Platform",
             name: req.body.name,
             errors: errors.array(),
