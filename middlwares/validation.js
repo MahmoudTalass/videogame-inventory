@@ -52,8 +52,6 @@ const validateGameInput = [
             PlatformService.getAllPlatforms(),
          ]);
 
-         console.log(genres, developers, platforms);
-
          return res.status(400).render("create-game-form", {
             title: "Add New Game",
             game,
