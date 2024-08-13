@@ -21,9 +21,18 @@ const validateGameInput = [
       .isFloat({ min: 0 })
       .withMessage("Price must at least be 0.")
       .customSanitizer((price) => parseFloat(price).toFixed(2)),
-   body("genres").isArray({ min: 1 }).withMessage("Must select at least one genre."),
-   body("platforms").isArray({ min: 1 }).withMessage("Must select at least one platform."),
-   body("developers").isArray({ min: 1 }).withMessage("Must select at least one developer."),
+   body("genres")
+      .custom((value) => (Array.isArray(value) ? value.length > 1 : value.length > 0))
+      .withMessage("Must select at least one genre.")
+      .customSanitizer((value) => (!Array.isArray(value) ? [value] : value)),
+   body("platforms")
+      .custom((value) => (Array.isArray(value) ? value.length > 1 : value.length > 0))
+      .withMessage("Must select at least one platform.")
+      .customSanitizer((value) => (!Array.isArray(value) ? [value] : value)),
+   body("developers")
+      .custom((value) => (Array.isArray(value) ? value.length > 1 : value.length > 0))
+      .withMessage("Must select at least one developer.")
+      .customSanitizer((value) => (!Array.isArray(value) ? [value] : value)),
    asyncHandler(async (req, res, next) => {
       const errors = validationResult(req);
 
@@ -43,16 +52,18 @@ const validateGameInput = [
             PlatformService.getAllPlatforms(),
          ]);
 
+         console.log(genres, developers, platforms);
+
          return res.status(400).render("create-game-form", {
             title: "Add New Game",
             game,
             checkedGenres: req.genres || [],
             checkedDevelopers: req.developers || [],
             checkedPlatforms: req.platforms || [],
-            genres: genres.map((genre) => genre.id),
-            developers: developers.map((developer) => developer.id),
-            platforms: platforms.map((platform) => platform.id),
-            errors: errors.array(),
+            genres,
+            developers,
+            platforms,
+            errors,
          });
       }
 
@@ -63,8 +74,8 @@ const validateGameInput = [
 const validateGenre = [
    body("name")
       .trim()
-      .isLength({ min: 0, max: 50 })
-      .withMessage("Genre name must be between 0 and 50 characters long."),
+      .isLength({ min: 1, max: 50 })
+      .withMessage("Genre name must be between 1 and 50 characters long."),
    (req, res, next) => {
       const errors = validationResult(req);
 
@@ -82,8 +93,8 @@ const validateGenre = [
 const validateDeveloper = [
    body("name")
       .trim()
-      .isLength({ min: 0, max: 100 })
-      .withMessage("Developer name must be between 0 and 100 characters long."),
+      .isLength({ min: 1, max: 100 })
+      .withMessage("Developer name must be between 1 and 100 characters long."),
    (req, res, next) => {
       const errors = validationResult(req);
 
@@ -101,8 +112,8 @@ const validateDeveloper = [
 const validatePlatform = [
    body("name")
       .trim()
-      .isLength({ min: 0, max: 0 })
-      .withMessage("Platform name must be between 0 and 50 characters long."),
+      .isLength({ min: 1, max: 50 })
+      .withMessage("Platform name must be between 1 and 50 characters long."),
    (req, res, next) => {
       const errors = validationResult(req);
 
