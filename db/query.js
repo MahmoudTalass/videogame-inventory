@@ -72,6 +72,19 @@ class GameService {
          pairGameWithCategory(gameId, platforms)
       );
    }
+
+   async getDetailsOfGame(id) {
+      const [genres, developers, platforms] = await Promise.all([
+         pool.query("SELECT genre_id FROM game_genre WHERE game_id = $1", [id]),
+         pool.query("SELECT developer_id FROM game_developer WHERE game_id = $1", [id]),
+         pool.query("SELECT platform_id FROM game_platform WHERE game_id = $1", [id]),
+      ]);
+      const genresOfGame = genres.rows.map((genre) => genre.genre_id);
+      const developersOfGame = developers.rows.map((developer) => developer.developer_id);
+      const platformsOfGame = platforms.rows.map((platform) => platform.platform_id);
+
+      return { genresOfGame, developersOfGame, platformsOfGame };
+   }
 }
 
 class GenreService {
