@@ -11,10 +11,11 @@
       <main>
          <div class="games-list">
             <h2><%=title%></h2>
+            <a href="/games/create">Add Game</a>
             <% games.forEach(game => { %>
             <div class="game-data">
                <div class="game-data-section">
-                  <p>Title: <%=game.title%></p>
+                  <p>Title: <a href="/games/<%=game.id%>"><%=game.title%></a></p>
                   <p>Released: <%=game.release_year%></p>
                   <p>Rating: <%=game.rating%>/10</p>
                </div>
