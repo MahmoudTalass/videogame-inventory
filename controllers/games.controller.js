@@ -12,7 +12,7 @@ const getGame = asyncHandler(async (req, res) => {
    const { id } = req.params;
    const game = await GameService.getGame(id);
 
-   // display in view
+   res.render("game", { title: game.title, game });
 });
 
 const createGameGet = asyncHandler(async (req, res) => {
