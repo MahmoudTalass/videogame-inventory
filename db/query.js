@@ -1,6 +1,5 @@
 const {
    multipleInsertsParameterization,
-   pairGameWithCategory,
    multipleDeleteParameterization,
 } = require("../helpers/helpers");
 const pool = require("./pool");
@@ -48,20 +47,20 @@ class GameService {
       await Promise.all([
          pool.query(
             `INSERT INTO game_genre (game_id, genre_id) VALUES ${genresInsertParameterization};`,
-            [genres]
+            genres
          ),
          pool.query(
             `INSERT INTO game_developer (game_id, developer_id) VALUES ${developersInsertParameterization};`,
-            [developers]
+            developers
          ),
          pool.query(
             `INSERT INTO game_platform (game_id, platform_id) VALUES ${platformsInsertParamterization};`,
-            [platforms]
+            platforms
          ),
       ]);
    }
 
-   async getDetailsOfGame(id) {
+   async getIdsOfGameDetails(id) {
       const [genres, developers, platforms] = await Promise.all([
          pool.query("SELECT genre_id FROM game_genre WHERE game_id = $1", [id]),
          pool.query("SELECT developer_id FROM game_developer WHERE game_id = $1", [id]),
@@ -117,24 +116,24 @@ class GameService {
       await Promise.all([
          pool.query(
             `INSERT INTO game_genre (game_id, genre_id) VALUES ${genresInsertParameterization};`,
-            [newGenres]
+            newGenres
          ),
          pool.query(
             `INSERT INTO game_developer (game_id, developer_id) VALUES ${developersInsertParameterization};`,
-            [newDevelopers]
+            newDevelopers
          ),
          pool.query(
             `INSERT INTO game_platform (game_id, platform_id) VALUES ${platformsInsertParamterization};`,
-            [newPlatforms]
+            newPlatforms
          ),
          pool.query(`DELETE FROM game_genre WHERE ${genresDeleteParameterization};`, [
-            [genresToBeDeleted],
+            genresToBeDeleted,
          ]),
          pool.query(`DELETE FROM game_developer WHERE ${developersDeleteParameterization};`, [
-            [developersToBeDeleted],
+            developersToBeDeleted,
          ]),
          pool.query(`DELETE FROM game_platform WHERE ${platformsDeleteParameterization};`, [
-            [platformsToBeDeleted],
+            platformsToBeDeleted,
          ]),
       ]);
    }
@@ -148,9 +147,9 @@ class GenreService {
    }
 
    async getAllGamesInGenre(id) {
-      const gamesQuery = `SELECT game.* 
-      FROM game 
-      JOIN game_genre ON game.id = game_genre.game_id 
+      const gamesQuery = `SELECT game.*
+      FROM game
+      JOIN game_genre ON game.id = game_genre.game_id
       JOIN genre ON game_genre.genre_id = genre.id
       WHERE genre.id = $1;`;
 
