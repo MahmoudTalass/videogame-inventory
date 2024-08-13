@@ -1,6 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const { GameService, PlatformService, GenreService, DeveloperService } = require("../db/query");
-const { validateGameInput } = require("../middlwares/validation");
+const { validateGameInputUpdate, validateGameInputCreate } = require("../middlwares/validation");
 const { getListDifferences } = require("../helpers/helpers");
 
 const getAllGames = asyncHandler(async (req, res) => {
@@ -32,11 +32,11 @@ const createGameGet = asyncHandler(async (req, res) => {
 });
 
 const createGamePost = [
-   validateGameInput,
+   validateGameInputCreate,
    asyncHandler(async (req, res) => {
       await GameService.createGame(req.body);
 
-      res.redirect("/games");
+      res.status(201).redirect("/games");
    }),
 ];
 
@@ -64,7 +64,7 @@ const updateGameGet = asyncHandler(async (req, res) => {
 });
 
 const updateGamePost = [
-   validateGameInput,
+   validateGameInputUpdate,
    asyncHandler(async (req, res) => {
       // existing details
       const { developersOfGame, genresOfGame, platformsOfGame } =
@@ -96,7 +96,7 @@ const updateGamePost = [
          newPlatforms,
       });
 
-      res.redirect("/games");
+      res.status(204).redirect("/games");
    }),
 ];
 

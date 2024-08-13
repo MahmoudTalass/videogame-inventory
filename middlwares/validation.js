@@ -2,7 +2,7 @@ const { validationResult, body } = require("express-validator");
 const asyncHandler = require("express-async-handler");
 const { DeveloperService, GenreService, PlatformService } = require("../db/query");
 
-const validateGameInput = [
+const gameInputValidation = [
    body("title")
       .trim()
       .isLength({ min: 1, max: 50 })
@@ -33,6 +33,10 @@ const validateGameInput = [
       .custom((value) => (Array.isArray(value) ? value.length > 1 : value.length > 0))
       .withMessage("Must select at least one developer.")
       .customSanitizer((value) => (!Array.isArray(value) ? [value] : value)),
+];
+
+const validateGameInputCreate = [
+   gameInputValidation,
    asyncHandler(async (req, res, next) => {
       const errors = validationResult(req);
 
@@ -54,6 +58,43 @@ const validateGameInput = [
 
          return res.status(400).render("create-game-form", {
             title: "Add New Game",
+            game,
+            checkedGenres: req.genres || [],
+            checkedDevelopers: req.developers || [],
+            checkedPlatforms: req.platforms || [],
+            genres,
+            developers,
+            platforms,
+            errors,
+         });
+      }
+
+      next();
+   }),
+];
+
+const validateGameInputUpdate = [
+   asyncHandler(async (req, res, next) => {
+      const errors = validationResult(req);
+
+      if (!errors.isEmpty()) {
+         const game = {
+            title: req.body.title,
+            description: req.body.description,
+            release_year: req.body.release,
+            rating: req.body.rating,
+            price: req.body.price,
+            quantity: req.body.quantity,
+         };
+
+         const [genres, developers, platforms] = await Promise.all([
+            GenreService.getAllGenres(),
+            DeveloperService.getAllDevelopers(),
+            PlatformService.getAllPlatforms(),
+         ]);
+
+         return res.status(400).render("update-game-form", {
+            title: "Update Game",
             game,
             checkedGenres: req.genres || [],
             checkedDevelopers: req.developers || [],
@@ -128,7 +169,8 @@ const validatePlatform = [
 ];
 
 module.exports = {
-   validateGameInput,
+   validateGameInputCreate,
+   validateGameInputUpdate,
    validateDeveloper,
    validateGenre,
    validatePlatform,
