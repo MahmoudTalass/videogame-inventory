@@ -9,7 +9,7 @@ router.get("/", platformsController.getAllPlatforms);
 router.get("/create", platformsController.createPlatformGet);
 
 // add new platform
-router.get("/create", platformsController.createPlatformGet);
+router.post("/create", platformsController.createPlatformPost);
 
 // list all games on a certain platform
 router.get("/:id/games", platformsController.getAllGamesOnPlatform);
