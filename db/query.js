@@ -78,16 +78,18 @@ class GenreService {
    }
 
    async getAllGamesInGenre(id) {
-      const { rows } = await pool.query(
-         `SELECT game.*, genre.name AS genre_name
+      const gamesQuery = `SELECT game.* 
       FROM game 
       JOIN game_genre ON game.id = game_genre.game_id 
       JOIN genre ON game_genre.genre_id = genre.id
-      WHERE genre.id = $1;`,
-         [id]
-      );
+      WHERE genre.id = $1;`;
 
-      return rows;
+      const [games, genreName] = await Promise.all([
+         pool.query(gamesQuery, [id]),
+         pool.query("SELECT name FROM genre WHERE id = $1", [id]),
+      ]);
+
+      return { games: games.rows, genreName: genreName.rows[0].name };
    }
 
    async createGenre(name) {
@@ -103,16 +105,18 @@ class DeveloperService {
    }
 
    async getAllGamesByDeveloper(id) {
-      const { rows } = await pool.query(
-         `SELECT game.*, developer.name AS developer_name
+      const gamesQuery = `SELECT game.* 
       FROM game 
       JOIN game_developer ON game.id = game_developer.game_id 
       JOIN developer ON game_developer.developer_id = developer.id
-      WHERE developer.id = $1;`,
-         [id]
-      );
+      WHERE developer.id = $1;`;
 
-      return rows;
+      const [games, developerName] = await Promise.all([
+         pool.query(gamesQuery, [id]),
+         pool.query("SELECT name FROM developer WHERE id = $1", [id]),
+      ]);
+
+      return { games: games.rows, developerName: developerName.rows[0].name };
    }
 
    async createDeveloper(name) {
@@ -127,16 +131,18 @@ class PlatformService {
    }
 
    async getAllGamesOnPlatform(id) {
-      const { rows } = await pool.query(
-         `SELECT game.* platform.name AS platform_name 
+      const gamesQuery = `SELECT game.* 
       FROM game 
       JOIN game_platform ON game.id = game_platform.game_id 
       JOIN platform ON game_platform.platform_id = platform.id
-      WHERE platform.id = $1;`,
-         [id]
-      );
+      WHERE platform.id = $1;`;
 
-      return rows;
+      const [games, platformName] = await Promise.all([
+         pool.query(gamesQuery, [id]),
+         pool.query("SELECT name FROM platform WHERE id = $1", [id]),
+      ]);
+
+      return { games: games.rows, platformName: platformName.rows[0].name };
    }
 
    async createPlatform(name) {
