@@ -15,7 +15,9 @@
             <ul class="category-list">
                <% list.forEach(item => { %>
                <li class="category-item">
-                  <a href="/<%=item.id%>" class="category-link"><%= item.name %></a>
+                  <a href="<%=category%>/<%=item.id%>/games" class="category-link"
+                     ><%= item.name %></a
+                  >
                </li>
                <% }) %> <% if (list.length === 0) { %>
                <li class="category-item">
