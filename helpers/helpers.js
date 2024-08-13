@@ -26,7 +26,6 @@ function multipleInsertsParameterization(gameId, numOfInserts) {
 
    for (let i = 1; i < numOfInserts + 1; i++) {
       result.push(`(${gameId}, $${i})`);
-      currentParameter += 2;
    }
 
    return result.join(", ");
