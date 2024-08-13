@@ -53,7 +53,7 @@ nav > ul {
 main {
    display: flex;
    justify-content: center;
-   margin-top: 3rem;
+   margin: 3rem 2rem;
 }
 
 .welcome-msg-container {
@@ -224,4 +224,5 @@ main {
    background-color: var(--color3);
    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
    border-radius: 0.5rem;
+   max-width: 600px;
 }
