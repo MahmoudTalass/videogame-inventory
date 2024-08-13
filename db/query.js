@@ -35,24 +35,30 @@ class GameService {
       );
       const gameId = rows[0].id;
 
-      const genresInsertParameterization = multipleInsertsParameterization(genres.length);
-
-      await pool.query(
-         `INSERT INTO game_genre (game_id, genre_id) VALUES ${genresInsertParameterization};`,
-         pairGameWithCategory(gameId, genres)
+      const genresInsertParameterization = multipleInsertsParameterization(gameId, genres.length);
+      const developersInsertParameterization = multipleInsertsParameterization(
+         gameId,
+         developers.length
+      );
+      const platformsInsertParamterization = multipleInsertsParameterization(
+         gameId,
+         platforms.length
       );
 
-      const developersInsertParameterization = multipleInsertsParameterization(developers.length);
-      await pool.query(
-         `INSERT INTO game_developer (game_id, developer_id) VALUES ${developersInsertParameterization};`,
-         pairGameWithCategory(gameId, developers)
-      );
-
-      const platformsInsertParamterization = multipleInsertsParameterization(platforms.length);
-      await pool.query(
-         `INSERT INTO game_platform (game_id, platform_id) VALUES ${platformsInsertParamterization};`,
-         pairGameWithCategory(gameId, platforms)
-      );
+      await Promise.all([
+         pool.query(
+            `INSERT INTO game_genre (game_id, genre_id) VALUES ${genresInsertParameterization};`,
+            [genres]
+         ),
+         pool.query(
+            `INSERT INTO game_developer (game_id, developer_id) VALUES ${developersInsertParameterization};`,
+            [developers]
+         ),
+         pool.query(
+            `INSERT INTO game_platform (game_id, platform_id) VALUES ${platformsInsertParamterization};`,
+            [platforms]
+         ),
+      ]);
    }
 
    async getDetailsOfGame(id) {
@@ -111,24 +117,24 @@ class GameService {
       await Promise.all([
          pool.query(
             `INSERT INTO game_genre (game_id, genre_id) VALUES ${genresInsertParameterization};`,
-            pairGameWithCategory(gameId, newGenres)
+            [newGenres]
          ),
          pool.query(
             `INSERT INTO game_developer (game_id, developer_id) VALUES ${developersInsertParameterization};`,
-            pairGameWithCategory(gameId, newDevelopers)
+            [newDevelopers]
          ),
          pool.query(
             `INSERT INTO game_platform (game_id, platform_id) VALUES ${platformsInsertParamterization};`,
-            pairGameWithCategory(gameId, newPlatforms)
+            [newPlatforms]
          ),
          pool.query(`DELETE FROM game_genre WHERE ${genresDeleteParameterization};`, [
-            genresToBeDeleted,
+            [genresToBeDeleted],
          ]),
          pool.query(`DELETE FROM game_developer WHERE ${developersDeleteParameterization};`, [
-            developersToBeDeleted,
+            [developersToBeDeleted],
          ]),
          pool.query(`DELETE FROM game_platform WHERE ${platformsDeleteParameterization};`, [
-            platformsToBeDeleted,
+            [platformsToBeDeleted],
          ]),
       ]);
    }

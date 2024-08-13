@@ -21,12 +21,11 @@ function getListDifferences(updatedList, oldList) {
       toBeDeleted: [...toBeDeleted],
    };
 }
-function multipleInsertsParameterization(numOfInserts) {
+function multipleInsertsParameterization(gameId, numOfInserts) {
    result = [];
 
-   currentParameter = 1;
-   for (let i = 0; i < numOfInserts; i++) {
-      result.push(`($${currentParameter}, $${currentParameter + 1})`);
+   for (let i = 1; i < numOfInserts + 1; i++) {
+      result.push(`(${gameId}, $${i})`);
       currentParameter += 2;
    }
 
@@ -36,11 +35,9 @@ function multipleInsertsParameterization(numOfInserts) {
 function multipleDeleteParameterization(gameId, numOfDeletes, categoryIdColumnName) {
    result = [];
 
-   currentParameter = 1;
-   for (let i = 0; i < numOfDeletes; i++) {
-      let str = `(game_id = ${gameId} AND ${categoryIdColumnName} = $${currentParameter})`;
+   for (let i = 1; i < numOfDeletes + 1; i++) {
+      let str = `(game_id = ${gameId} AND ${categoryIdColumnName} = $${i})`;
 
-      currentParameter += 2;
       if (i != numOfDeletes - 1) {
          str += " OR";
       }
@@ -51,20 +48,8 @@ function multipleDeleteParameterization(gameId, numOfDeletes, categoryIdColumnNa
    return result.join(" ");
 }
 
-function pairGameWithCategory(gameId, categoryIdsArr) {
-   result = [];
-
-   categoryIdsArr.forEach((id) => {
-      result.push(gameId);
-      result.push(id);
-   });
-
-   return result;
-}
-
 module.exports = {
    getListDifferences,
    multipleInsertsParameterization,
-   pairGameWithCategory,
    multipleDeleteParameterization,
 };
