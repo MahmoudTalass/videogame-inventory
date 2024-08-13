@@ -1,27 +1,9 @@
+const {
+   multipleInsertsParameterization,
+   pairGameWithCategory,
+   multipleDeleteParameterization,
+} = require("../helpers/helpers");
 const pool = require("./pool");
-
-function multipleInsertsParameterization(numOfInserts) {
-   result = [];
-
-   currentParameter = 1;
-   for (let i = 0; i < numOfInserts; i++) {
-      result.push(`($${currentParameter}, $${currentParameter + 1})`);
-      currentParameter += 2;
-   }
-
-   return result.join(", ");
-}
-
-function pairGameWithCategory(gameId, categoryIdsArr) {
-   result = [];
-
-   categoryIdsArr.forEach((id) => {
-      result.push(gameId);
-      result.push(id);
-   });
-
-   return result;
-}
 
 class GameService {
    async getAllGames() {
@@ -85,11 +67,76 @@ class GameService {
 
       return { genresOfGame, developersOfGame, platformsOfGame };
    }
+
+   async updateGame({
+      title,
+      description,
+      release,
+      price,
+      quantity,
+      rating,
+      newGenres,
+      newDevelopers,
+      newPlatforms,
+      genresToBeDeleted,
+      developersToBeDeleted,
+      platformsToBeDeleted,
+   }) {
+      const { rows } = await pool.query(
+         "UPDATE game SET title = $1, description = $2, release = $3, price = $4, quantity = $5, rating = $6 RETURNING id;",
+         [title, description, release, price, quantity, rating]
+      );
+
+      const gameId = rows[0].id;
+
+      const genresInsertParameterization = multipleInsertsParameterization(newGenres.length);
+      const developersInsertParameterization = multipleInsertsParameterization(
+         newDevelopers.length
+      );
+      const platformsInsertParamterization = multipleInsertsParameterization(newPlatforms.length);
+
+      const genresDeleteParameterization = multipleDeleteParameterization(
+         gameId,
+         genresToBeDeleted.length
+      );
+      const developersDeleteParameterization = multipleDeleteParameterization(
+         gameId,
+         developersToBeDeleted.length
+      );
+      const platformsDeleteParameterization = multipleDeleteParameterization(
+         gameId,
+         platformsToBeDeleted.length
+      );
+
+      await Promise.all([
+         pool.query(
+            `INSERT INTO game_genre (game_id, genre_id) VALUES ${genresInsertParameterization};`,
+            pairGameWithCategory(gameId, newGenres)
+         ),
+         pool.query(
+            `INSERT INTO game_developer (game_id, developer_id) VALUES ${developersInsertParameterization};`,
+            pairGameWithCategory(gameId, newDevelopers)
+         ),
+         pool.query(
+            `INSERT INTO game_platform (game_id, platform_id) VALUES ${platformsInsertParamterization};`,
+            pairGameWithCategory(gameId, newPlatforms)
+         ),
+         pool.query(`DELETE FROM game_genre WHERE ${genresDeleteParameterization};`, [
+            genresToBeDeleted,
+         ]),
+         pool.query(`DELETE FROM game_developer WHERE ${developersDeleteParameterization};`, [
+            developersToBeDeleted,
+         ]),
+         pool.query(`DELETE FROM game_platform WHERE ${platformsDeleteParameterization};`, [
+            platformsToBeDeleted,
+         ]),
+      ]);
+   }
 }
 
 class GenreService {
    async getAllGenres() {
-      const { rows } = await pool.query("SELECT * FROM genre");
+      const { rows } = await pool.query("SELECT * FROM genre;");
 
       return Promise.resolve(rows);
    }
