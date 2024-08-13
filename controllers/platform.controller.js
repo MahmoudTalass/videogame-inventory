@@ -10,10 +10,10 @@ const getAllPlatforms = asyncHandler(async (req, res) => {
 
 const getAllGamesOnPlatform = asyncHandler(async (req, res) => {
    const { id } = req.params;
-   const games = await PlatformService.getAllGamesOnPlatform(id);
+   const { games, platformName } = await PlatformService.getAllGamesOnPlatform(id);
 
    res.render("games", {
-      title: `Games on ${games[0].platform_name}`,
+      title: `Games on ${platformName}`,
       games,
    });
 });

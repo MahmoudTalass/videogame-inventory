@@ -14,9 +14,13 @@ const getAllDevelopers = asyncHandler(async (req, res) => {
 
 const getAllGamesByDeveloper = asyncHandler(async (req, res) => {
    const { id } = req.params;
-   const games = await DeveloperService.getAllGamesByDeveloper(id);
+   const { games, developerName } = await DeveloperService.getAllGamesByDeveloper(id);
 
-   res.render("games", { title: `Games by ${games[0].developer_name}`, games });
+   res.render("games", {
+      title: `Games by ${developerName}`,
+      games,
+      category: "developers",
+   });
 });
 
 const createDeveloperGet = (req, res) => {

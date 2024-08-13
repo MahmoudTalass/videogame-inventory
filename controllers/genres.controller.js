@@ -10,11 +10,12 @@ const getAllGenres = asyncHandler(async (req, res) => {
 
 const getAllGamesInGenre = asyncHandler(async (req, res) => {
    const { id } = req.params;
-   const games = await GenreService.getAllGamesInGenre(id);
+   const { games, genreName } = await GenreService.getAllGamesInGenre(id);
 
    res.render("games", {
-      title: `${games[0].genre_name} Games`,
+      title: `${genreName} Games`,
       games,
+      category: "genres",
    });
 });
 
@@ -37,4 +38,5 @@ module.exports = {
    createGenreGet,
    createGenrePost,
    getAllGenres,
+   getAllGamesInGenre,
 };
