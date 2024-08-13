@@ -19,6 +19,8 @@ function pairGameWithCategory(gameId, categoryIdsArr) {
       result.push(gameId);
       result.push(id);
    });
+
+   return result;
 }
 
 class GameService {
@@ -31,7 +33,7 @@ class GameService {
    async getGame(id) {
       const { rows } = await pool.query("SELECT * FROM game WHERE id = $1;", [id]);
 
-      return rows[0];
+      return Promise.resolve(rows[0]);
    }
 
    async createGame({
@@ -45,25 +47,27 @@ class GameService {
       developers,
       platforms,
    }) {
-      const gameId = pool.query(
+      const { rows } = await pool.query(
          "INSERT INTO game (title, description, rating, release_year, price, quantity) VALUES($1, $2, $3, $4, $5, $6) RETURNING id;",
          [title, description, rating, release, price, quantity]
       );
+      const gameId = rows[0].id;
 
       const genresInsertParameterization = multipleInsertsParameterization(genres.length);
-      pool.query(
+
+      await pool.query(
          `INSERT INTO game_genre (game_id, genre_id) VALUES ${genresInsertParameterization};`,
          pairGameWithCategory(gameId, genres)
       );
 
       const developersInsertParameterization = multipleInsertsParameterization(developers.length);
-      pool.query(
+      await pool.query(
          `INSERT INTO game_developer (game_id, developer_id) VALUES ${developersInsertParameterization};`,
          pairGameWithCategory(gameId, developers)
       );
 
       const platformsInsertParamterization = multipleInsertsParameterization(platforms.length);
-      pool.query(
+      await pool.query(
          `INSERT INTO game_platform (game_id, platform_id) VALUES ${platformsInsertParamterization};`,
          pairGameWithCategory(gameId, platforms)
       );
