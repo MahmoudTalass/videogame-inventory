@@ -1,6 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const { GameService, PlatformService, GenreService, DeveloperService } = require("../db/query");
 const { validateGameInput } = require("../middlwares/validation");
+const { getListDifferences } = require("../helpers/helpers");
 
 const getAllGames = asyncHandler(async (req, res) => {
    const games = await GameService.getAllGames();
@@ -39,9 +40,71 @@ const createGamePost = [
    }),
 ];
 
+const updateGameGet = asyncHandler(async (req, res) => {
+   const { id } = req.params;
+
+   const [game, genres, developers, platforms, gameDetails] = await Promise.all([
+      GameService.getGame(id),
+      GenreService.getAllGenres(),
+      DeveloperService.getAllDevelopers(),
+      PlatformService.getAllPlatforms(),
+      GameService.getDetailsOfGame(id),
+   ]);
+
+   res.status(400).render("create-game-form", {
+      title: "Update Game Details",
+      game,
+      checkedGenres: gameDetails.genresOfGame,
+      checkedDevelopers: gameDetails.developersOfGame,
+      checkedPlatforms: gameDetails.platformsOfGame,
+      genres,
+      developers,
+      platforms,
+   });
+});
+
+const updateGamePost = [
+   validateGameInput,
+   asyncHandler(async (req, res) => {
+      // existing details
+      const { developersOfGame, genresOfGame, platformsOfGame } =
+         await GameService.getDetailsOfGame(id);
+
+      // updated details (may include existing details)
+      const { genres, platforms, developers } = req.body;
+
+      const { toBeAdded: newGenres, toBeDeleted: genresToBeDeleted } = getListDifferences(
+         genres,
+         genresOfGame
+      );
+      const { toBeAdded: newDevelopers, toBeDeleted: developersToBeDeleted } = getListDifferences(
+         developers,
+         developersOfGame
+      );
+      const { toBeAdded: newPlatforms, toBeDeleted: platformsToBeDeleted } = getListDifferences(
+         platforms,
+         platformsOfGame
+      );
+
+      await GameService.updateGame({
+         ...req.body,
+         developersToBeDeleted,
+         genresToBeDeleted,
+         platformsToBeDeleted,
+         newGenres,
+         newDevelopers,
+         newPlatforms,
+      });
+
+      res.redirect("/games");
+   }),
+];
+
 module.exports = {
    getAllGames,
    getGame,
    createGameGet,
    createGamePost,
+   updateGameGet,
+   updateGamePost,
 };
