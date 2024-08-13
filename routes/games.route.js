@@ -14,6 +14,12 @@ router.post("/create", gamesController.createGamePost);
 // get certain game
 router.get("/:id", gamesController.getGame);
 
+// render update game form
+router.get("/:id/update", gamesController.updateGameGet);
+
+// update game
+router.post("/:id/update", gamesController.updateGamePost);
+
 // delete game
 router.post("/:id/delete");
 
