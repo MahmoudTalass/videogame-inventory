@@ -12,7 +12,7 @@ router.get("/create", genresController.createGenreGet);
 router.post("/create", genresController.createGenrePost);
 
 // list all games in a certain genre
-router.get("/:id/games");
+router.get("/:id/games", genresController.getAllGamesInGenre);
 
 // delete platform
 router.get("/:id");

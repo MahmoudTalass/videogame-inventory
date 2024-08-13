@@ -12,7 +12,7 @@ router.get("/create", platformsController.createPlatformGet);
 router.get("/create", platformsController.createPlatformGet);
 
 // list all games on a certain platform
-router.get("/:id/games");
+router.get("/:id/games", platformsController.getAllGamesOnPlatform);
 
 // delete platform
 router.get("/:id");
