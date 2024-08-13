@@ -35,40 +35,34 @@
             <fieldset class="input-container">
                <legend>Genres:</legend>
                <% genres.forEach((genre) => { %>
-               <label for="<%= genre.name %>"><%= genre.name %></label>
-               <input
-                  type="checkbox"
-                  checked="<% local.checkedGenres && local.checkedGenres.includes(genre.id) %>"
-                  value="<%= genre.id %>"
-                  name="genres"
-                  id="<%= genre.name %>"
-               />
+               <div class="checkbox-input-container">
+                  <label for="<%= genre.name %>"><%= genre.name %></label>
+                  <input type="checkbox" <%= locals.checkedGenres &&
+                  locals.checkedGenres.includes(genre.id) ? "checked" : "" %> value="<%= genre.id
+                  %>" name="genres" id="<%= genre.name %>" />
+               </div>
                <% }) %>
             </fieldset>
             <fieldset class="input-container">
                <legend>Platforms:</legend>
                <% platforms.forEach(platform => { %>
-               <label for="<%= platform.name %>"><%= platform.name %></label>
-               <input
-                  type="checkbox"
-                  checked="<% local.checkedPlatforms && local.checkedPlatforms.includes(platform.id) %>"
-                  value="<%= platform.id %>"
-                  name="platforms"
-                  id="<%= platform.name %>"
-               />
+               <div class="checkbox-input-container">
+                  <label for="<%= platform.name %>"><%= platform.name %></label>
+                  <input type="checkbox" <%= locals.checkedPlatforms &&
+                  locals.checkedPlatforms.includes(platform.id) ? "checked" : "" %> value="<%=
+                  platform.id %>" name="platforms" id="<%= platform.name %>" />
+               </div>
                <% }) %>
             </fieldset>
             <fieldset class="input-container">
                <legend>Developers:</legend>
                <% developers.forEach(developer => { %>
-               <label for="<%= developer.name %>"><%= Developers.name %></label>
-               <input
-                  type="checkbox"
-                  checked="<% local.checkedDevelopers && local.checkedDevelopers.includes(developer.id) %>"
-                  value="<%= developer.id %>"
-                  name="developers"
-                  id="<%= developer.name %>"
-               />
+               <div class="checkbox-input-container">
+                  <label for="<%= developer.name %>"><%= developer.name %></label>
+                  <input type="checkbox" <%= locals.checkedDevelopers &&
+                  locals.checkedDevelopers.includes(developer.id) ? "checked" : "" %> value="<%=
+                  developer.id %>" name="developers" id="<%= developer.name %>" />
+               </div>
                <% }) %>
             </fieldset>
             <div class="input-container">
