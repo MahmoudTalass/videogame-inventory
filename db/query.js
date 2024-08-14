@@ -146,6 +146,19 @@ class GenreService {
       return Promise.resolve(rows);
    }
 
+   async getGenresOfGame(id) {
+      const { rows } = await pool.query(
+         `SELECT genre.name 
+         FROM genre 
+         JOIN game_genre ON genre.id = game_genre.genre_id 
+         JOIN game ON game_genre.game_id = game.id 
+         WHERE game.id = $1;`,
+         [id]
+      );
+
+      return Promise.resolve(rows);
+   }
+
    async getAllGamesInGenre(id) {
       const gamesQuery = `SELECT game.*
       FROM game
@@ -173,6 +186,19 @@ class DeveloperService {
       return Promise.resolve(rows);
    }
 
+   async getDevelopersOfGame(id) {
+      const { rows } = await pool.query(
+         `SELECT developer.name 
+         FROM developer 
+         JOIN game_developer ON developer.id = game_developer.developer_id 
+         JOIN game ON game_developer.game_id = game.id 
+         WHERE game.id = $1;`,
+         [id]
+      );
+
+      return Promise.resolve(rows);
+   }
+
    async getAllGamesByDeveloper(id) {
       const gamesQuery = `SELECT game.* 
       FROM game 
@@ -196,6 +222,19 @@ class DeveloperService {
 class PlatformService {
    async getAllPlatforms() {
       const { rows } = await pool.query("SELECT * FROM platform;");
+      return Promise.resolve(rows);
+   }
+
+   async getPlatformsOfGame(id) {
+      const { rows } = await pool.query(
+         `SELECT platform.name 
+         FROM platform 
+         JOIN game_platform ON platform.id = game_platform.platform_id
+          JOIN game ON game_platform.game_id = game.id 
+          WHERE game.id = $1;`,
+         [id]
+      );
+
       return Promise.resolve(rows);
    }
 
