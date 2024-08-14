@@ -11,9 +11,20 @@ const getAllGames = asyncHandler(async (req, res) => {
 
 const getGame = asyncHandler(async (req, res) => {
    const { id } = req.params;
-   const game = await GameService.getGame(id);
+   const [game, genres, developers, platforms] = await Promise.all([
+      GameService.getGame(id),
+      GenreService.getGenresOfGame(id),
+      DeveloperService.getDevelopersOfGame(id),
+      PlatformService.getPlatformsOfGame(id),
+   ]);
 
-   res.render("game", { title: game.title, game });
+   res.render("game", {
+      title: game.title,
+      game,
+      genres,
+      developers,
+      platforms,
+   });
 });
 
 const createGameGet = asyncHandler(async (req, res) => {
@@ -48,7 +59,7 @@ const updateGameGet = asyncHandler(async (req, res) => {
       GenreService.getAllGenres(),
       DeveloperService.getAllDevelopers(),
       PlatformService.getAllPlatforms(),
-      GameService.getDetailsOfGame(id),
+      GameService.getIdsOfGameDetails(id),
    ]);
 
    res.status(400).render("create-game-form", {
@@ -68,7 +79,7 @@ const updateGamePost = [
    asyncHandler(async (req, res) => {
       // existing details
       const { developersOfGame, genresOfGame, platformsOfGame } =
-         await GameService.getDetailsOfGame(id);
+         await GameService.getIdsOfGameDetails(id);
 
       // updated details (may include existing details)
       const { genres, platforms, developers } = req.body;
