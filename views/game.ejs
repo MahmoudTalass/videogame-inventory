@@ -14,6 +14,18 @@
             <p>Release Year: <%=game.release_year%></p>
             <p>Rating: <%=game.rating%>/10</p>
             <p>Description: <%=game.description%></p>
+            <p>
+               Genres: <% genres.forEach((genre, index) => { %> <%=genre.name%> <% index !=
+               genres.length - 1 ? ", " : " " %><% }) %>
+            </p>
+            <p>
+               Developers: <% developers.forEach((developer, index) => { %> <%=developer.name%> <%
+               index != developers.length - 1 ? ", " : " " %><% }) %>
+            </p>
+            <p>
+               Platforms: <% platforms.forEach((platform, index) => { %> <%=platform.name%> <% index
+               != platforms.length - 1 ? ", " : " " %> <% }) %>
+            </p>
             <p>Price: $<%=game.price%></p>
             <p>Quantity: <%=game.quantity%></p>
             <a href="/games/<%=game.id%>/update">Update</a>
