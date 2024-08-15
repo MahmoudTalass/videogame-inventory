@@ -34,9 +34,22 @@ const createGenrePost = [
    }),
 ];
 
+const deleteGenre = asyncHandler(async (req, res) => {
+   const { id } = req.params;
+   const { games: gamesInGenre } = await GenreService.getAllGamesInGenre(id);
+
+   if (gamesInGenre.length > 0) {
+      return res.redirect(`/genres`);
+   }
+
+   await GenreService.deleteGenre(id);
+   res.status(204).redirect("/genres");
+});
+
 module.exports = {
    createGenreGet,
    createGenrePost,
    getAllGenres,
    getAllGamesInGenre,
+   deleteGenre,
 };

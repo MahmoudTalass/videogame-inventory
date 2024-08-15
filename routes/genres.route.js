@@ -14,7 +14,7 @@ router.post("/create", genresController.createGenrePost);
 // list all games in a certain genre
 router.get("/:id/games", genresController.getAllGamesInGenre);
 
-// delete platform
-router.get("/:id");
+// delete genre
+router.post("/:id/delete", genresController.deleteGenre);
 
 module.exports = router;

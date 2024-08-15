@@ -1,5 +1,5 @@
 const asyncHandler = require("express-async-handler");
-const { PlatformService } = require("../db/query");
+const { PlatformService, GameService } = require("../db/query");
 const { validatePlatform } = require("../middlwares/validation");
 
 const getAllPlatforms = asyncHandler(async (req, res) => {
@@ -33,9 +33,22 @@ const createPlatformPost = [
    }),
 ];
 
+const deletePlatform = asyncHandler(async (req, res) => {
+   const { id } = req.params;
+   const gamesOnPlatform = await PlatformService.getAllGamesOnPlatform(id);
+
+   if (gamesOnPlatform.length > 0) {
+      return res.redirect(`/platforms`);
+   }
+
+   await PlatformService.deletePlatform(id);
+   res.status(204).redirect("/platforms");
+});
+
 module.exports = {
    getAllPlatforms,
    createPlatformGet,
    createPlatformPost,
    getAllGamesOnPlatform,
+   deletePlatform,
 };

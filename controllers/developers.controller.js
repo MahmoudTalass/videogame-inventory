@@ -38,9 +38,22 @@ const createDeveloperPost = [
    }),
 ];
 
+const deleteDeveloper = asyncHandler(async (req, res) => {
+   const { id } = req.params;
+   const gamesByDeveloper = await DeveloperService.getAllGamesByDeveloper(id);
+
+   if (gamesByDeveloper.length > 0) {
+      return res.redirect(`/developers`);
+   }
+
+   await DeveloperService.deleteDeveloper(id);
+   res.status(204).redirect("/developers");
+});
+
 module.exports = {
    getAllDevelopers,
    getAllGamesByDeveloper,
    createDeveloperGet,
    createDeveloperPost,
+   deleteDeveloper,
 };

@@ -15,6 +15,6 @@ router.post("/create", developersController.createDeveloperPost);
 router.get("/:id/games", developersController.getAllGamesByDeveloper);
 
 // delete developer
-router.get("/:id/delete");
+router.post("/:id/delete", developersController.deleteDeveloper);
 
 module.exports = router;

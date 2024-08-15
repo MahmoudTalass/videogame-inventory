@@ -15,6 +15,6 @@ router.post("/create", platformsController.createPlatformPost);
 router.get("/:id/games", platformsController.getAllGamesOnPlatform);
 
 // delete platform
-router.get("/:id");
+router.post("/:id/delete", platformsController.deletePlatform);
 
 module.exports = router;
