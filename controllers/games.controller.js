@@ -18,6 +18,10 @@ const getGame = asyncHandler(async (req, res) => {
       PlatformService.getPlatformsOfGame(id),
    ]);
 
+   if (game.length == 0) {
+      return res.redirect("/games");
+   }
+
    res.render("game", {
       title: game.title,
       game,
@@ -62,7 +66,7 @@ const updateGameGet = asyncHandler(async (req, res) => {
       GameService.getIdsOfGameDetails(id),
    ]);
 
-   res.status(400).render("create-game-form", {
+   res.status(400).render("update-game-form", {
       title: "Update Game Details",
       game,
       checkedGenres: gameDetails.genresOfGame,
@@ -77,6 +81,8 @@ const updateGameGet = asyncHandler(async (req, res) => {
 const updateGamePost = [
    validateGameInputUpdate,
    asyncHandler(async (req, res) => {
+      const { id } = req.params;
+
       // existing details
       const { developersOfGame, genresOfGame, platformsOfGame } =
          await GameService.getIdsOfGameDetails(id);
@@ -105,9 +111,10 @@ const updateGamePost = [
          newGenres,
          newDevelopers,
          newPlatforms,
+         gameId: id,
       });
 
-      res.status(204).redirect("/games");
+      res.status(204).redirect("/games/" + id);
    }),
 ];
 

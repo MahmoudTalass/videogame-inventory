@@ -14,7 +14,7 @@ class GameService {
    async getGame(id) {
       const { rows } = await pool.query("SELECT * FROM game WHERE id = $1;", [id]);
 
-      return Promise.resolve(rows[0]);
+      return Promise.resolve(rows[0] || []);
    }
 
    async createGame({
