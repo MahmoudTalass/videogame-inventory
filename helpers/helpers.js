@@ -37,7 +37,7 @@ function multipleDeleteParameterization(gameId, numOfDeletes, categoryIdColumnNa
    for (let i = 1; i < numOfDeletes + 1; i++) {
       let str = `(game_id = ${gameId} AND ${categoryIdColumnName} = $${i})`;
 
-      if (i != numOfDeletes - 1) {
+      if (i != numOfDeletes) {
          str += " OR";
       }
 
