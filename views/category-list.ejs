@@ -11,13 +11,23 @@
       <main>
          <div class="category-list-container">
             <p>Clicking on any of the following will show you games in that category.</p>
+            <p>
+               <b
+                  >Important: to delete any of the following, you must make sure that no game is
+                  using it. You should either delete the game or update it so it isn't using the
+                  item you'd like to delete.</b
+               >
+            </p>
             <a href="/<%=category%>/create">Add more!</a>
             <ul class="category-list">
                <% list.forEach(item => { %>
                <li class="category-item">
-                  <a href="<%=category%>/<%=item.id%>/games" class="category-link"
+                  <a href="/<%=category%>/<%=item.id%>/games" class="category-link"
                      ><%= item.name %></a
                   >
+                  <form action="/<%=category%>/<%=item.id%>/delete" method="post">
+                     <button type="submit">Delete</button>
+                  </form>
                </li>
                <% }) %> <% if (list.length === 0) { %>
                <li class="category-item">
@@ -27,5 +37,20 @@
             </ul>
          </div>
       </main>
+      <!-- <script defer>
+         let gamesInCategory = "<%= locals.gamesInCategory %>";
+         console.log("this is a string", gamesInCategory.length);
+         window.onload = () => {
+            if (gamesInCategory.length != 0) {
+               gamesInCategory = gamesInCategory.split(", ");
+               const gamesList = gamesInCategory.map((game) => "*" + game.title).join("\n");
+               // console.log(gamesList);
+               // console.log(gamesInCategory);
+               window.alert(
+                  `Cannot delete this item because the following games are using it:\n ${gamesList}`
+               );
+            }
+         };
+      </script> -->
    </body>
 </html>
