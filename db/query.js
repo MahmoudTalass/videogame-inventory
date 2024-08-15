@@ -208,6 +208,10 @@ class GenreService {
    async createGenre(name) {
       await pool.query("INSERT INTO genre (name) VALUES ($1);", [name]);
    }
+
+   async deleteGenre(id) {
+      await pool.query("DELETE FROM genre WHERE id = $1;", [id]);
+   }
 }
 
 class DeveloperService {
@@ -248,6 +252,10 @@ class DeveloperService {
    async createDeveloper(name) {
       await pool.query("INSERT INTO developer (name) VALUES ($1);", [name]);
    }
+
+   async deleteDeveloper(id) {
+      await pool.query("DELETE FROM developer WHERE id = $1;", [id]);
+   }
 }
 
 class PlatformService {
@@ -286,6 +294,10 @@ class PlatformService {
 
    async createPlatform(name) {
       await pool.query("INSERT INTO platform (name) VALUES ($1);", [name]);
+   }
+
+   async deletePlatform(id) {
+      await pool.query("DELETE FROM platform WHERE id = $1;", [id]);
    }
 }
 
