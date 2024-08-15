@@ -86,56 +86,83 @@ class GameService {
       genresToBeDeleted,
       developersToBeDeleted,
       platformsToBeDeleted,
+      gameId,
    }) {
-      const { rows } = await pool.query(
-         "UPDATE game SET title = $1, description = $2, release = $3, price = $4, quantity = $5, rating = $6 RETURNING id;",
-         [title, description, release, price, quantity, rating]
+      await pool.query(
+         "UPDATE game SET title = $1, description = $2, release_year = $3, price = $4, quantity = $5, rating = $6 WHERE id = $7;",
+         [title, description, release, price, quantity, rating, gameId]
       );
 
-      const gameId = rows[0].id;
-
-      const genresInsertParameterization = multipleInsertsParameterization(newGenres.length);
+      const genresInsertParameterization = multipleInsertsParameterization(
+         gameId,
+         newGenres.length
+      );
       const developersInsertParameterization = multipleInsertsParameterization(
+         gameId,
          newDevelopers.length
       );
-      const platformsInsertParamterization = multipleInsertsParameterization(newPlatforms.length);
+      const platformsInsertParamterization = multipleInsertsParameterization(
+         gameId,
+         newPlatforms.length
+      );
 
       const genresDeleteParameterization = multipleDeleteParameterization(
          gameId,
-         genresToBeDeleted.length
+         genresToBeDeleted.length,
+         "genre_id"
       );
       const developersDeleteParameterization = multipleDeleteParameterization(
          gameId,
-         developersToBeDeleted.length
+         developersToBeDeleted.length,
+         "developer_id"
       );
       const platformsDeleteParameterization = multipleDeleteParameterization(
          gameId,
-         platformsToBeDeleted.length
+         platformsToBeDeleted.length,
+         "platform_id"
       );
 
-      await Promise.all([
-         pool.query(
+      if (newGenres.length > 0) {
+         await pool.query(
             `INSERT INTO game_genre (game_id, genre_id) VALUES ${genresInsertParameterization};`,
             newGenres
-         ),
-         pool.query(
+         );
+      }
+
+      if (newDevelopers.length > 0) {
+         await pool.query(
             `INSERT INTO game_developer (game_id, developer_id) VALUES ${developersInsertParameterization};`,
             newDevelopers
-         ),
-         pool.query(
+         );
+      }
+
+      if (newPlatforms.length > 0) {
+         await pool.query(
             `INSERT INTO game_platform (game_id, platform_id) VALUES ${platformsInsertParamterization};`,
             newPlatforms
-         ),
-         pool.query(`DELETE FROM game_genre WHERE ${genresDeleteParameterization};`, [
-            genresToBeDeleted,
-         ]),
-         pool.query(`DELETE FROM game_developer WHERE ${developersDeleteParameterization};`, [
-            developersToBeDeleted,
-         ]),
-         pool.query(`DELETE FROM game_platform WHERE ${platformsDeleteParameterization};`, [
-            platformsToBeDeleted,
-         ]),
-      ]);
+         );
+      }
+
+      if (genresToBeDeleted.length > 0) {
+         await pool.query(
+            `DELETE FROM game_genre WHERE ${genresDeleteParameterization};`,
+            genresToBeDeleted
+         );
+      }
+
+      if (developersToBeDeleted.length > 0) {
+         await pool.query(
+            `DELETE FROM game_developer WHERE ${developersDeleteParameterization};`,
+            developersToBeDeleted
+         );
+      }
+
+      if (platformsToBeDeleted.length > 0) {
+         await pool.query(
+            `DELETE FROM game_platform WHERE ${platformsDeleteParameterization};`,
+            platformsToBeDeleted
+         );
+      }
    }
 }
 
