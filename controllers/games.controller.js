@@ -118,6 +118,14 @@ const updateGamePost = [
    }),
 ];
 
+const deleteGame = asyncHandler(async (req, res) => {
+   const { id } = req.params;
+
+   await GameService.deleteGame(id);
+
+   res.status(204).redirect("/games");
+});
+
 module.exports = {
    getAllGames,
    getGame,
@@ -125,4 +133,5 @@ module.exports = {
    createGamePost,
    updateGameGet,
    updateGamePost,
+   deleteGame,
 };

@@ -41,7 +41,15 @@
             <p>Price: $<%=game.price%></p>
             <p>Quantity: <%=game.quantity%></p>
             <a href="/games/<%=game.id%>/update">Update</a>
-            <a href="/games/<%=game.id%>/delete">Delete</a>
+            <form action="/games/<%=game.id%>/delete" method="post">
+               <button
+                  type="submit"
+                  class="submit-btn"
+                  onclick="return confirm('Are you sure you\'d like to delete this game?')"
+               >
+                  Delete
+               </button>
+            </form>
          </div>
       </main>
    </body>

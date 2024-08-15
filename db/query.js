@@ -164,6 +164,10 @@ class GameService {
          );
       }
    }
+
+   async deleteGame(id) {
+      await pool.query("DELETE FROM game WHERE id = $1", [id]);
+   }
 }
 
 class GenreService {

@@ -21,6 +21,6 @@ router.get("/:id/update", gamesController.updateGameGet);
 router.post("/:id/update", gamesController.updateGamePost);
 
 // delete game
-router.post("/:id/delete");
+router.post("/:id/delete", gamesController.deleteGame);
 
 module.exports = router;
