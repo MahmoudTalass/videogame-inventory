@@ -133,6 +133,20 @@ main {
 
 .category-item {
    margin-bottom: 0.5rem;
+   display: flex;
+   gap: 0.5rem;
+}
+
+.category-item button {
+   background-color: transparent;
+   border: 1px solid var(--color2);
+   border-radius: 0.5rem;
+   padding: 0.3rem 0.4rem;
+}
+
+.category-item button:hover {
+   border: none;
+   background-color: red;
 }
 
 .game-form {
