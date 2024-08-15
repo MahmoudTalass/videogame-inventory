@@ -24,15 +24,27 @@ const gameInputValidation = [
    body("genres")
       .custom((value) => (Array.isArray(value) ? value.length > 1 : value.length > 0))
       .withMessage("Must select at least one genre.")
-      .customSanitizer((value) => (!Array.isArray(value) ? [value] : value)),
+      .customSanitizer((value) => {
+         const arr = !Array.isArray(value) ? [value] : value;
+         const parsedToNums = arr.map((num) => Number(num));
+         return parsedToNums;
+      }),
    body("platforms")
       .custom((value) => (Array.isArray(value) ? value.length > 1 : value.length > 0))
       .withMessage("Must select at least one platform.")
-      .customSanitizer((value) => (!Array.isArray(value) ? [value] : value)),
+      .customSanitizer((value) => {
+         const arr = !Array.isArray(value) ? [value] : value;
+         const parsedToNums = arr.map((num) => Number(num));
+         return parsedToNums;
+      }),
    body("developers")
       .custom((value) => (Array.isArray(value) ? value.length > 1 : value.length > 0))
       .withMessage("Must select at least one developer.")
-      .customSanitizer((value) => (!Array.isArray(value) ? [value] : value)),
+      .customSanitizer((value) => {
+         const arr = !Array.isArray(value) ? [value] : value;
+         const parsedToNums = arr.map((num) => Number(num));
+         return parsedToNums;
+      }),
 ];
 
 const validateGameInputCreate = [
@@ -74,6 +86,7 @@ const validateGameInputCreate = [
 ];
 
 const validateGameInputUpdate = [
+   gameInputValidation,
    asyncHandler(async (req, res, next) => {
       const errors = validationResult(req);
 
