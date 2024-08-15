@@ -35,7 +35,7 @@ const createPlatformPost = [
 
 const deletePlatform = asyncHandler(async (req, res) => {
    const { id } = req.params;
-   const gamesOnPlatform = await PlatformService.getAllGamesOnPlatform(id);
+   const { games: gamesOnPlatform } = await PlatformService.getAllGamesOnPlatform(id);
 
    if (gamesOnPlatform.length > 0) {
       return res.redirect(`/platforms`);
